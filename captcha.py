@@ -7,8 +7,9 @@ def get_color_codes(image):
     return np.unique(image)
 
 class Captcha:
-    def __init__(self, image_path):
-        self.digit = self.captcha_to_digit(image_path)
+    def __init__(self, image_path, write):
+        self.write = write
+        self.digit = self.captcha_to_digit(image_path, write)
 
     def _resize(self, image, new_size):
         (h, w) = image.shape[:2]
@@ -24,23 +25,27 @@ class Captcha:
 
         return bw_im
 
-    def captcha_to_digit(self, image_path):
-        new_size = 4
-        lower_thresh = 230
-        kernel_size = (0, 0)
-        sigma = 7
+    def captcha_to_digit(self, image_path, write=False):
+        new_size = 5
+        lower_thresh = 210
+        matrix_size = (0, 0)
+        sigma = 6.5
 
         image = cv2.imread(image_path)
         image = self._resize(image, new_size)
-        image = cv2.GaussianBlur(image, kernel_size, sigma)
-        bw_im = self._gray_to_blackwhite(image, lower_thresh, write=True)
+        image = cv2.GaussianBlur(image, matrix_size, sigma)
+        bw_im = self._gray_to_blackwhite(image, lower_thresh)
 
-        numbers = pytesseract.image_to_string(bw_im)
+        numbers = pytesseract.image_to_string(bw_im, lang='eng',
+                config='--psm 6 tessedit_char_whitelist=0123456789')
+
+        if write == True:
+            cv2.imwrite(f'captcha_processed/{image_path[8]}.jpeg', bw_im)
+
         return ''.join(c for c in numbers if c.isdigit())
- 
+
 
 if __name__ == '__main__':
     for i in range(1,6):
-        cap = Captcha(f'captcha/{i}.jpeg')
+        cap = Captcha(f'captcha/{i}.jpeg', write=True)
         print(cap.digit)
-        break
