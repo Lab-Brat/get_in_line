@@ -26,18 +26,17 @@ class Captcha:
         return bw_im
 
     def captcha_to_digit(self, image_path, write=False):
-        new_size = 5
+        new_size = 4
         lower_thresh = 210
         matrix_size = (0, 0)
-        sigma = 6.5
+        sigma = 4
 
         image = cv2.imread(image_path)
         image = self._resize(image, new_size)
         image = cv2.GaussianBlur(image, matrix_size, sigma)
         bw_im = self._gray_to_blackwhite(image, lower_thresh)
 
-        numbers = pytesseract.image_to_string(bw_im, lang='eng',
-                config='--psm 6 tessedit_char_whitelist=0123456789')
+        numbers = pytesseract.image_to_string(bw_im, config='--psm 6 tessedit_char_whitelist=0123456789')
 
         if write == True:
             cv2.imwrite(f'captcha_processed/{image_path[8]}.jpeg', bw_im)
