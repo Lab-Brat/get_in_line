@@ -1,5 +1,7 @@
 info
 geckodriver.log
 source.html
-venv/
+captcha_processed/
+captcha_archive/
 __pycache__/
+venv/
