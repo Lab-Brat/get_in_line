@@ -1,6 +1,7 @@
-import pytesseract
 import cv2
 import numpy as np
+from twocaptcha import TwoCaptcha
+import pytesseract
 pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
 
 def get_color_codes(image):
@@ -9,7 +10,8 @@ def get_color_codes(image):
 class Captcha:
     def __init__(self, image_path, write):
         self.write = write
-        self.digit = self.captcha_to_digit(image_path, write)
+        self.image = image_path
+        self.key   = '2captcha_api_key'
 
     def _resize(self, image, new_size):
         (h, w) = image.shape[:2]
@@ -25,7 +27,7 @@ class Captcha:
 
         return bw_im
 
-    def captcha_to_digit(self, image_path, write=False):
+    def _solve_local(self, image_path, write=False):
         new_size = 4
         lower_thresh = 210
         matrix_size = (0, 0)
@@ -43,8 +45,22 @@ class Captcha:
 
         return ''.join(c for c in numbers if c.isdigit())
 
+    def _read_api_key(self):
+        with open(self.key, 'r') as key:
+            return key.readlines()[0]
+
+    def _solve_2captcha(self, image_path):
+        api_key = self._read_api_key()
+        solver = TwoCaptcha(api_key)
+        return solver.normal(image_path)['code']
+    
+    def solve(self, method='local'):
+        if method == 'local':
+            return self._solve_local(self.image, self.write)
+        elif method == '2captcha':
+            return self._solve_2captcha(self.image)
+
 
 if __name__ == '__main__':
-    for i in range(1,6):
-        cap = Captcha(f'captcha/{i}.jpeg', write=True)
-        print(cap.digit)
+    cap = Captcha(f'captcha/3.jpeg', write=True)
+    print(cap.solve(method='local'))
