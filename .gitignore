@@ -1,8 +1,4 @@
-info
-2captcha_api_key
-geckodriver.log
-source.html
-captcha_processed/
-captcha_archive/
 __pycache__/
 venv/
+data/_*
+geckodriver.log

@@ -2,8 +2,8 @@ import configparser
 from browser import Browser
 
 config = configparser.ConfigParser()
-config.read('info')
+config.read('data/_info')
 
 bb = Browser(config, 'ist')
-bb.write_html()
-# bb.automate()
+# bb.write_html()
+bb.automate()

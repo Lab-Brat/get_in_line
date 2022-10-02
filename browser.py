@@ -22,7 +22,7 @@ class Browser():
         self.driver.get(url)
 
     def write_html(self):
-        with open('source.html', 'w') as file:
+        with open('data/_source.html', 'w') as file:
             file.write(self.driver.page_source)
         self.driver.close()
 

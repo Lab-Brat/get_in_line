@@ -11,7 +11,7 @@ class Captcha:
     def __init__(self, image_path, write):
         self.write = write
         self.image = image_path
-        self.key   = '2captcha_api_key'
+        self.key   = 'data/_2captcha_api_key'
 
     def _resize(self, image, new_size):
         (h, w) = image.shape[:2]
@@ -41,7 +41,7 @@ class Captcha:
         numbers = pytesseract.image_to_string(bw_im, config='--psm 6 tessedit_char_whitelist=0123456789')
 
         if write == True:
-            cv2.imwrite(f'captcha_processed/{image_path[8]}.jpeg', bw_im)
+            cv2.imwrite(f'data/_captcha_processed/{image_path[8]}.jpeg', bw_im)
 
         return ''.join(c for c in numbers if c.isdigit())
 
@@ -58,9 +58,10 @@ class Captcha:
         if method == 'local':
             return self._solve_local(self.image, self.write)
         elif method == '2captcha':
+            print('Starting communication with 2captcha servers...')
             return self._solve_2captcha(self.image)
 
 
 if __name__ == '__main__':
-    cap = Captcha(f'captcha/3.jpeg', write=True)
-    print(cap.solve(method='local'))
+    cap = Captcha(f'data/captcha/4.jpeg', write=True)
+    print(cap.solve(method='2captcha'))
