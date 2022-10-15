@@ -6,4 +6,4 @@ config.read('data/_info')
 
 bb = Browser(config, 'trb')
 # bb.write_html()
-bb.automate()
+bb.automate(method = '2captcha')

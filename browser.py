@@ -44,7 +44,7 @@ class Browser():
         im = im.crop((left, top, right, bottom))
         im.save('data/_tmp_screenshot.png')
 
-    def automate(self):
+    def fill_initial_form(self, method):
         input_name = self.driver.find_element("name", self.field_num)
         input_code = self.driver.find_element("name", self.field_pas)
         self.driver.execute_script(f'arguments[0].value="{self.user_num}"', input_name)
@@ -53,6 +53,10 @@ class Browser():
         input_captcha = self.driver.find_element("name", self.field_cin)
         self.get_captcha()
         solver = Captcha('data/_tmp_screenshot.png', write=False)
-        input_captcha.send_keys(solver.solve(method='local'))
+        input_captcha.send_keys(solver.solve(method=method))
         input_captcha.send_keys(Keys.ENTER)
         # self.driver.close()
+
+    def automate(self, method='local'):
+        self.fill_initial_form(method)
+        
