@@ -31,7 +31,7 @@ class Browser():
         self.field_cap = self.config["fields"]["cap"]
         self.field_cin = self.config["fields"]["cap_input"]
         self.button_nx = self.config["buttons"]["next"]
-        self.button_ap = self.config["buttons"]["next"]
+        self.button_ap = self.config["buttons"]["appl"]
 
         self.user_num = self.config["user"]["num"]
         self.user_pas = self.config["user"]["pas"]
@@ -39,7 +39,6 @@ class Browser():
     def write_html(self):
         with open('data/_source.html', 'w') as file:
             file.write(self.driver.page_source)
-        # self.driver.close()
 
     def get_captcha(self):
         captcha = self.driver.find_element("id", self.field_cap)
@@ -60,14 +59,12 @@ class Browser():
         self.get_captcha()
         solver = Captcha('data/_tmp_screenshot.png', write=False)
         input_captcha.send_keys(solver.solve(method=method))
-        input_captcha.send_keys(Keys.ENTER)
         WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, self.button_nx))).click()
-        # self.driver.close()
+            EC.element_to_be_clickable((By.CSS_SELECTOR, self.button_nx))).click()
 
     def check_line(self):
         WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, self.button_ap))).click()
+            EC.element_to_be_clickable((By.CSS_SELECTOR, self.button_ap))).click()
 
     def verify_result(self):
         not_found = 'Извините, но в настоящий момент'
@@ -84,7 +81,9 @@ class Browser():
 
     def automate(self, method='2capcha'):
         self.fill_initial_form(method)
+        WebDriverWait(self.driver, 3)
         self.check_line()
         # Waiting for 3 seconds to load the page
         WebDriverWait(self.driver, 3)
         print(self.verify_result())
+        self.driver.close()
