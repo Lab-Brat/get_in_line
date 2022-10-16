@@ -39,7 +39,7 @@ class Browser():
     def write_html(self):
         with open('data/_source.html', 'w') as file:
             file.write(self.driver.page_source)
-        self.driver.close()
+        # self.driver.close()
 
     def get_captcha(self):
         captcha = self.driver.find_element("id", self.field_cap)
@@ -69,7 +69,22 @@ class Browser():
         WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, self.button_ap))).click()
 
+    def verify_result(self):
+        not_found = 'Извините, но в настоящий момент'
+        if not_found in self.driver.page_source:
+            return ("=================\n"
+                    "no luck Boss, please don't be mad :(\n"
+                    "=================")
+        else:
+            return ("=================\n"
+                    "an opening FOUND !!!\n"
+                    "...\n"
+                    "or i'm broken, please fix me\n"
+                    "=================\n")
+
     def automate(self, method='2capcha'):
         self.fill_initial_form(method)
         self.check_line()
-        self.write_html()
+        # Waiting for 3 seconds to load the page
+        WebDriverWait(self.driver, 3)
+        print(self.verify_result())
