@@ -1,0 +1,7 @@
+selenium
+webdriver_manager
+pillow
+opencv-python
+numpy
+2captcha-python
+pytesseract
