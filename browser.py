@@ -4,7 +4,6 @@ from PIL import Image
 from io import BytesIO
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -79,11 +78,15 @@ class Browser():
                     "or i'm broken, please fix me\n"
                     "=================\n")
 
-    def automate(self, method='2capcha'):
+    def automate(self, method='2capcha', show=False):
         self.fill_initial_form(method)
-        WebDriverWait(self.driver, 3)
+        WebDriverWait(self.driver, 2)
         self.check_line()
-        # Waiting for 3 seconds to load the page
-        WebDriverWait(self.driver, 3)
-        print(self.verify_result())
+        WebDriverWait(self.driver, 2)
+        result = self.verify_result()
         self.driver.close()
+
+        if show == True:
+            print(result)
+
+        return result
