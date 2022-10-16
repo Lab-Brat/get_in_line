@@ -5,7 +5,11 @@ from io import BytesIO
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.firefox import GeckoDriverManager
+
 
 class Browser():
     def __init__(self, config, destination):
@@ -26,6 +30,8 @@ class Browser():
         self.field_pas = self.config["fields"]["pas"]
         self.field_cap = self.config["fields"]["cap"]
         self.field_cin = self.config["fields"]["cap_input"]
+        self.button_nx = self.config["buttons"]["next"]
+        self.button_ap = self.config["buttons"]["next"]
 
         self.user_num = self.config["user"]["num"]
         self.user_pas = self.config["user"]["pas"]
@@ -46,7 +52,7 @@ class Browser():
 
     def fill_initial_form(self, method):
         input_name = self.driver.find_element("name", self.field_num)
-        input_code = self.driver.find_element("name", self.field_pas)
+        input_code = self.driver.find_element("name", self.field_pas)  
         self.driver.execute_script(f'arguments[0].value="{self.user_num}"', input_name)
         self.driver.execute_script(f'arguments[0].value="{self.user_pas}"', input_code)
 
@@ -55,8 +61,15 @@ class Browser():
         solver = Captcha('data/_tmp_screenshot.png', write=False)
         input_captcha.send_keys(solver.solve(method=method))
         input_captcha.send_keys(Keys.ENTER)
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, self.button_nx))).click()
         # self.driver.close()
 
-    def automate(self, method='local'):
+    def check_line(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, self.button_ap))).click()
+
+    def automate(self, method='2capcha'):
         self.fill_initial_form(method)
-        
+        self.check_line()
+        self.write_html()
