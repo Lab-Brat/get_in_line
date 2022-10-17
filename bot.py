@@ -21,10 +21,11 @@ chat_id = config["bot"]["cid"]
 
 # Run bot
 while True:
+    sleep_time = random.randint(9, 42)
+    sleep_message = f"Next check in {sleep_time} minutes"
     bb = Browser(config, 'trb')
     result = bb.automate(method = '2captcha', show = False)
-    send_to_telegram(api_token, chat_id, result)
+    send_to_telegram(api_token, chat_id, f"{result}\n{sleep_message}")
 
-    sleep_time = random.randint(9, 52)
     print(f'sleeping for {sleep_time} minutes')
     time.sleep(sleep_time * 60)

@@ -73,14 +73,12 @@ class Browser():
         not_found = 'Извините, но в настоящий момент'
         if not_found in self.driver.page_source:
             return ("=================\n"
-                    "no luck Boss, please don't be mad :(\n"
-                    "=================")
+                    "no luck Boss, please don't be mad :(\n")
         else:
             return ("=================\n"
                     "an opening FOUND !!!\n"
                     "...\n"
-                    "or i'm broken, please fix me\n"
-                    "=================\n")
+                    "or i'm broken, please fix me\n")
 
     def automate(self, method='2capcha', show=False):
         self.fill_initial_form(method)
