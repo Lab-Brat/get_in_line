@@ -3,6 +3,7 @@ from captcha import Captcha
 from PIL import Image
 from io import BytesIO
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -22,7 +23,10 @@ class Browser():
                 print('Invalid URL. Available options: [trb, ist]')
                 sys.exit()
         self.service = Service(GeckoDriverManager().install())
-        self.driver  = webdriver.Firefox(service = self.service)
+        self.options = Options()
+        self.options.headless = True
+        self.driver  = webdriver.Firefox(options = self.options, 
+                                         service = self.service)
         self.driver.get(url)
 
         self.field_num = self.config["fields"]["num"]
