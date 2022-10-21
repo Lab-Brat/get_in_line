@@ -72,13 +72,11 @@ class Browser():
     def verify_result(self):
         not_found = 'Извините, но в настоящий момент'
         if not_found in self.driver.page_source:
-            return ("=================\n"
-                    "no luck Boss, please don't be mad :(\n")
+            return {"result": False, 
+                    "message": "no luck :(\n"}
         else:
-            return ("=================\n"
-                    "an opening FOUND !!!\n"
-                    "...\n"
-                    "or i'm broken, please fix me\n")
+            return {"result": True, 
+                    "message": "an opening FOUND !!!\n"}
 
     def automate(self, method='2capcha', show=False):
         self.fill_initial_form(method)
