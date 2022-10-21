@@ -40,10 +40,16 @@ class Browser():
         self.user_pas = self.config["user"]["pas"]
 
     def write_html(self):
+        '''
+        Write currently open web page to an html file.
+        '''
         with open('data/_source.html', 'w') as file:
             file.write(self.driver.page_source)
 
     def get_captcha(self):
+        '''
+        Save captcha from the webpage locally.
+        '''
         captcha = self.driver.find_element("id", self.field_cap)
         location, size = captcha.location, captcha.size
         im = Image.open(BytesIO(self.driver.get_screenshot_as_png()))
@@ -53,6 +59,10 @@ class Browser():
         im.save('data/_tmp_screenshot.png')
 
     def fill_initial_form(self, method):
+        '''
+        Fill in application number and code,
+        solve captcha (from get_captcha) and submit form.
+        '''
         input_name = self.driver.find_element("name", self.field_num)
         input_code = self.driver.find_element("name", self.field_pas)  
         self.driver.execute_script(f'arguments[0].value="{self.user_num}"', input_name)
@@ -66,10 +76,16 @@ class Browser():
             EC.element_to_be_clickable((By.CSS_SELECTOR, self.button_nx))).click()
 
     def check_line(self):
+        '''
+        Click on the verification button after form submission.
+        '''
         WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, self.button_ap))).click()
 
     def verify_result(self):
+        '''
+        Check if an appointment date is available.
+        '''
         not_found = 'Извините, но в настоящий момент'
         if not_found in self.driver.page_source:
             return {"result": False, 
@@ -79,6 +95,9 @@ class Browser():
                     "message": "an opening FOUND !!!\n"}
 
     def automate(self, method='2capcha', show=False):
+        '''
+        Run above methods in sequence to obtain a result.
+        '''
         self.fill_initial_form(method)
         WebDriverWait(self.driver, 2)
         self.check_line()

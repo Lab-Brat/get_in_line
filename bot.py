@@ -5,6 +5,9 @@ import configparser
 from browser import Browser
 
 def send_to_telegram(api_token, chat_id, message):
+    '''
+    Send a message to a Telegram chat.
+    '''
     apiURL = f'https://api.telegram.org/bot{api_token}/sendMessage'
     try:
         response = requests.post(apiURL, json={'chat_id': chat_id, 'text': message})

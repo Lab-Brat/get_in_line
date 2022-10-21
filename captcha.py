@@ -14,10 +14,16 @@ class Captcha:
         self.key   = 'data/_2captcha_api_key'
 
     def _resize(self, image, new_size):
+        '''
+        Enlarge the image.
+        '''
         (h, w) = image.shape[:2]
         return cv2.resize(image, (w*new_size, h*new_size))
 
     def _gray_to_blackwhite(self, image, lower_thresh, write=False):
+        '''
+        Make the image black and white for better contrast.
+        '''
         gray_im = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         bw_im = cv2.threshold(gray_im, lower_thresh, 255, cv2.THRESH_BINARY)[1]
 
@@ -28,6 +34,9 @@ class Captcha:
         return bw_im
 
     def _solve_local(self, image_path, write=False):
+        '''
+        Solve captcha using pytesseract (~30% accuracy)
+        '''
         new_size = 4
         lower_thresh = 210
         matrix_size = (0, 0)
@@ -46,15 +55,24 @@ class Captcha:
         return ''.join(c for c in numbers if c.isdigit())
 
     def _read_api_key(self):
+        '''
+        Read 2captcha api key.
+        '''
         with open(self.key, 'r') as key:
             return key.readlines()[0]
 
     def _solve_2captcha(self, image_path):
+        '''
+        Solve captcha using 2captcha online service.
+        '''
         api_key = self._read_api_key()
         solver = TwoCaptcha(api_key)
         return solver.normal(image_path)['code']
     
     def solve(self, method='local'):
+        '''
+        Solve captcha with a specified method.
+        '''
         if method == 'local':
             return self._solve_local(self.image, self.write)
         elif method == '2captcha':
