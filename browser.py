@@ -39,11 +39,11 @@ class Browser():
         self.user_num = self.config["user"]["num"]
         self.user_pas = self.config["user"]["pas"]
 
-    def write_html(self):
+    def write_html(self, filename):
         '''
         Write currently open web page to an html file.
         '''
-        with open('data/_source.html', 'w') as file:
+        with open(f'data/{filename}', 'w') as file:
             file.write(self.driver.page_source)
 
     def get_captcha(self):
@@ -91,6 +91,7 @@ class Browser():
             return {"result": False, 
                     "message": "no luck :(\n"}
         else:
+            self.write_html('_login_success.html')
             return {"result": True, 
                     "message": "an opening FOUND !!!\n"}
 
