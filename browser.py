@@ -12,7 +12,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 
 
 class Browser():
-    def __init__(self, config, destination):
+    def __init__(self, config, destination, mode = 'normal'):
         self.config  = config
         match destination:
             case 'trb':
@@ -24,7 +24,8 @@ class Browser():
                 sys.exit()
         self.service = Service(GeckoDriverManager().install())
         self.options = Options()
-        self.options.headless = True
+        if mode == 'headless':
+            self.options.headless = True
         self.driver  = webdriver.Firefox(options = self.options, 
                                          service = self.service)
         self.driver.get(url)
@@ -72,14 +73,14 @@ class Browser():
         self.get_captcha()
         solver = Captcha('data/_tmp_screenshot.png', write=False)
         input_captcha.send_keys(solver.solve(method=method))
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 15).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, self.button_nx))).click()
 
     def check_line(self):
         '''
         Click on the verification button after form submission.
         '''
-        WebDriverWait(self.driver, 10).until(
+        WebDriverWait(self.driver, 15).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, self.button_ap))).click()
 
     def verify_result(self):
@@ -95,7 +96,7 @@ class Browser():
             return {"result": True, 
                     "message": "an opening FOUND !!!\n"}
 
-    def automate(self, method='2capcha', show=False):
+    def automate(self, method='2capcha', show=False):   
         '''
         Run above methods in sequence to obtain a result.
         '''
@@ -104,7 +105,8 @@ class Browser():
         self.check_line()
         WebDriverWait(self.driver, 2)
         result = self.verify_result()
-        self.driver.close()
+        if result["result"] == False:
+            self.driver.close()
 
         if show == True:
             print(result)
