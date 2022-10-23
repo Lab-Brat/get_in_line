@@ -1,6 +1,6 @@
 # get_in_line
 ### About
-A program I wrote for myself to automate checking the status of an online application.  
+Automate checking the status of an online application.  
 Stack: Python, Selenium, OpenCV, PyTesseract, 2captcha.  
 <br/>
 In a nutshell, `Selenium` opens Firefox browser, fills out required fields in a form, 
