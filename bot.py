@@ -20,12 +20,12 @@ def run(time_interval):
         sleep_message = f"Next check in {time_interval} minutes"
         bb = Browser(config, 'trb')
         result = bb.automate(method = '2captcha', show = False)
-        print(result)
+        print(f"{result['message']}timestamp: {result['time']}")
         if result['result']:
             send_to_telegram(api_token, chat_id, 
                             f"{result['message']}\n{sleep_message}")
 
-        print(f'sleeping for {sleep_time} minutes')
+        print(f'sleeping for {sleep_time} minutes\n')
         time.sleep(sleep_time * 60)
 
 

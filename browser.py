@@ -1,4 +1,5 @@
 import sys
+import datetime
 from captcha import Captcha
 from PIL import Image
 from io import BytesIO
@@ -90,11 +91,13 @@ class Browser():
         not_found = 'Извините, но в настоящий момент'
         if not_found in self.driver.page_source:
             return {"result": False, 
-                    "message": "no luck :(\n"}
+                    "message": "no luck :(\n",
+                    "time": datetime.datetime.now().strftime("%H:%M:%S")}
         else:
             self.write_html('_login_success.html')
             return {"result": True, 
-                    "message": "an opening FOUND !!!\n"}
+                    "message": "an opening FOUND !!!\n",
+                    "time": datetime.datetime.now().strftime("%H:%M:%S")}
 
     def automate(self, method='2capcha', show=False):   
         '''
