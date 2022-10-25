@@ -126,5 +126,6 @@ class Browser():
             result = {"result": False, 
                       "message": "Exeded maxium retry count\n",
                       "time": datetime.datetime.now().strftime("%H:%M:%S")}
+            self.driver.close()
 
         return result
