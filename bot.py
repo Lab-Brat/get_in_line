@@ -15,9 +15,9 @@ def send_to_telegram(api_token, chat_id, message):
     except Exception as e:
         print(e)
 
-def run(sleep_time):
+def run(time_range):
     while True:
-        sleep_time = random.randint(sleep_time[0], sleep_time[1])
+        sleep_time = random.randint(time_range[0], time_range[1])
         sleep_message = f"Next check in {sleep_time} minutes"
         bb = Browser(config, 'trb')
         result = bb.automate(method = '2captcha', show = False)
