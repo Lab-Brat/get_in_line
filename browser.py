@@ -103,15 +103,28 @@ class Browser():
         '''
         Run above methods in sequence to obtain a result.
         '''
-        self.fill_initial_form(method)
-        WebDriverWait(self.driver, 2)
-        self.check_line()
-        WebDriverWait(self.driver, 2)
-        result = self.verify_result()
-        if result["result"] == False:
-            self.driver.close()
+        result = None
+        tries  = 0
+        while result is None and tries <= 5:
+            try:
+                self.fill_initial_form(method)
+                WebDriverWait(self.driver, 2)
+                self.check_line()
+                WebDriverWait(self.driver, 2)
+                result = self.verify_result()
+                if result["result"] == False:
+                    self.driver.close()
+            except:
+                print("Couldn't get the result, retrying...")
+                tries += 1
+                self.driver.refresh()
 
         if show == True:
             print(result)
+
+        if tries == 5:
+            result = {"result": False, 
+                      "message": "Exeded maxium retry count\n",
+                      "time": datetime.datetime.now().strftime("%H:%M:%S")}
 
         return result
