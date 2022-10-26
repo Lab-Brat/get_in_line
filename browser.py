@@ -117,12 +117,14 @@ class Browser():
             except:
                 print("Couldn't get the result, retrying...")
                 tries += 1
-                self.driver.refresh()
+                self.driver.find_element("name", self.field_num).clear()
+                self.driver.find_element("name", self.field_pas).clear()
+                self.driver.find_element("name", self.field_cin).clear()
 
         if show == True:
             print(result)
 
-        if tries == 5:
+        if tries >= 4:
             result = {"result": False, 
                       "message": "Exeded maxium retry count\n",
                       "time": datetime.datetime.now().strftime("%H:%M:%S")}
